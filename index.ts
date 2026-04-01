@@ -301,14 +301,14 @@ class AudioRecorderPlayer {
       this._isRecording = false;
       this._hasPausedRecord = false;
 
-      if (returnSegments !== undefined) {
+      if (Platform.OS === 'android') {
+        // Always pass the boolean on Android to avoid bridge method overload
+        // dispatch bug — the no-args variant routes to the wrong native method
+        return RNAudioRecorderPlayer.stopRecorder(returnSegments ?? false);
+      } else if (returnSegments !== undefined) {
         return RNAudioRecorderPlayer.stopRecorder(returnSegments);
       } else {
-        if (Platform.OS === 'android') {
-          return RNAudioRecorderPlayer.stopRecorder();
-        } else {
-          return RNAudioRecorderPlayer.stopRecorderWithNoOptions();
-        }
+        return RNAudioRecorderPlayer.stopRecorderWithNoOptions();
       }
     }
 
